@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include "Pila.h"
 
 using namespace std;
 
@@ -53,34 +54,35 @@ bool equilibrada(const char cadena[], int n) {
     
 bool llaves(const char cadena[], int n, const char caracterAbertura, const char caracterCierre) {
     
+    Pila<int> colaAbiertos;
+    
     bool completos = true;
     
     int i = 0;
     int j = n-1;
     
-    int abiertos = 0;
-    int cerrados = 0;
-    
-    while(i <= j) {
+    while(i < n) {
         
-//        formatIndices(cadena, i, j);
-        
-        if (cadena[j] != caracterCierre) {
-            j--;
-        } else if (cadena[j] == caracterCierre && cadena[i] != caracterAbertura ) {
-            i++;
+        if(cadena[i] == caracterAbertura) {
             
-        } else if (cadena[j] == caracterCierre && cadena[i] == caracterAbertura) {
-            j--;
-            i++;
+            colaAbiertos.apila(cadena[i]);
             
-            completos = true;
-        } else {
-            completos = false;
+        } else if (cadena[i] == caracterCierre) {
+            
+            try {
+                colaAbiertos.desapila();
+            } catch(EPilaVacia e) {
+                cout << e.msg() << endl;
+            }
         }
-        
+        i++;
     }
-    return completos = (abiertos == cerrados);
+
+    if ( ! colaAbiertos.esVacia()) {
+        completos = false;
+    }
+    
+    return completos;
 }
     
 void formatIndices(const char cadena[], const int i, const int j) {
